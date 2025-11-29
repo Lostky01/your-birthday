@@ -59,9 +59,8 @@ export default {
         },
       },
       fontFamily: {
-        orbitron: ['Orbitron', 'sans-serif'],
-        poppins: ['Poppins', 'sans-serif'],
-        mono: ['Share Tech Mono', 'monospace'],
+        pixel: ['"Press Start 2P"', 'cursive'],
+        retro: ['"VT323"', 'monospace'],
       },
       borderRadius: {
         lg: "var(--radius)",

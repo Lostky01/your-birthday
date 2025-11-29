@@ -1,108 +1,118 @@
-import { motion, useScroll, useTransform } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import confetti from "canvas-confetti";
-import { Heart, Sparkles, Star, Cake, PartyPopper, Crown, TrendingUp, Zap, Coffee, Music, Smile, Gift, Flame, Trophy, Target, Wand2, Rocket, Moon, MoonStarIcon } from "lucide-react";
+import { 
+  Heart, 
+  Sparkles, 
+  Star, 
+  Cake, 
+  PartyPopper, 
+  Crown,
+  Zap,
+  Gamepad2,
+  Music,
+  Gift,
+  Trophy,
+  Rocket,
+  Pizza,
+  Coffee,
+  Sun,
+  Moon,
+  Cloud,
+  Target,
+  Flame,
+  Wand2,
+  StarIcon,
+  MoonStarIcon
+} from "lucide-react";
+import { Button } from "./ui/button";
 
 const BirthdayScreen = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [score, setScore] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"]
   });
 
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  useEffect(() => {
-    const fire = () => {
-      confetti({ 
-        particleCount: 80, 
-        spread: 60, 
-        origin: { y: 0.7 },
-        colors: ['#FF69B4', '#87CEEB', '#DDA0DD', '#FFB6C1', '#B0E0E6']
-      });
-    };
-    fire();
-    const interval = setInterval(fire, 4000);
-    return () => clearInterval(interval);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   const triggerConfetti = () => {
+    const count = 200;
+    const defaults = {
+      origin: { y: 0.7 },
+      colors: ['#FF69B4', '#87CEEB', '#DDA0DD', '#FFB6C1', '#B0E0E6']
+    };
+
+    function fire(particleRatio: number, opts: any) {
+      confetti({
+        ...defaults,
+        ...opts,
+        particleCount: Math.floor(count * particleRatio)
+      });
+    }
+
+    fire(0.25, { spread: 26, startVelocity: 55 });
+    fire(0.2, { spread: 60 });
+    fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+    fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+    fire(0.1, { spread: 120, startVelocity: 45 });
+  };
+
+  const collectCoin = () => {
+    setScore(score + 100);
     confetti({
-      particleCount: 150,
-      spread: 120,
+      particleCount: 30,
+      spread: 50,
       origin: { y: 0.6 },
-      colors: ['#FF69B4', '#87CEEB', '#DDA0DD', '#FFB6C1', '#B0E0E6', '#F5DEB3']
+      colors: ['#FFD700', '#FFA500']
     });
   };
 
-  const sarcasticMessages = [
-    { 
-      title: "System Update Required",
-      desc: "Selamat! Lu resmi naik versi. Bug masih banyak, fitur baru belum tentu berguna, tapi hey, setidaknya lu masih jalan tanpa eror. ",
-      icon: <Star className="w-12 h-12" />
-    },
-    { 
-      title: "Achievement: Still Surviving",
-      desc: "Lu berhasil melewati 365 hari penuh drama, random anxiety, overthinking jam 10 malem, dan realitas yang kadang ga sesuai ekspektasi. Proud of you king👑",
-      icon: <Crown className="w-12 h-12" />
-    },
-    { 
-      title: "Worldwide Announcement",
-      desc: "Peneliti menemukan spesies langka yang tambah umur tapi tetep keliatan keren. Spoiler: itu lu. Humanity grateful, bumi aman.",
-      icon: <Sparkles className="w-12 h-12" />
-    },
-    { 
-      title: "Fun Fact of The Day",
-      desc: "Semakin tua lu, semakin gede value lu, kaya NFT tapi yang ga scam. Harganya naik karena personality nya, bukan hype doang.",
-      icon: <MoonStarIcon className="w-12 h-12" />
-    }
-  ];
-
   return (
-    <div 
-      ref={containerRef}
-      className="relative min-h-screen w-full overflow-x-hidden bg-gradient-to-br from-pink-100 via-blue-100 to-purple-100"
-    >
-      {/* Animated gradient orbs */}
-      <motion.div 
-        className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full blur-3xl opacity-30"
-        style={{ 
-          background: 'radial-gradient(circle, hsl(var(--hot-pink)), transparent)',
-          y: backgroundY 
-        }}
-      />
-      <motion.div 
-        className="absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl opacity-30"
-        style={{ 
-          background: 'radial-gradient(circle, hsl(var(--baby-blue)), transparent)',
-          y: useTransform(backgroundY, v => `${parseFloat(v as string) * -1}%`)
-        }}
-      />
+    <div ref={containerRef} className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#FF69B4] via-[#DDA0DD] to-[#87CEEB]">
+      {/* Pixel Grid Background */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="grid grid-cols-20 grid-rows-20 h-full w-full">
+          {Array.from({ length: 400 }).map((_, i) => (
+            <div key={i} className="border border-white/20" />
+          ))}
+        </div>
+      </div>
 
-      {/* Sparkle cursor follower */}
-      <motion.div 
-        className="pointer-events-none fixed w-64 h-64 rounded-full blur-2xl opacity-40"
-        style={{
-          background: 'radial-gradient(circle, hsl(var(--lavender)), transparent)',
-          left: mousePosition.x - 128,
-          top: mousePosition.y - 128,
-        }}
-        animate={{
-          scale: [1, 1.2, 1],
-        }}
-        transition={{ duration: 2, repeat: Infinity }}
-      />
-
-      {/* Floating hearts and stars */}
+      {/* Floating Pixel Elements */}
+      {/* {[...Array(20)].map((_, i) => (
+        <motion.div
+          key={`pixel-${i}`}
+          className="absolute text-4xl"
+          initial={{ 
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            rotate: 0
+          }}
+          animate={{ 
+            y: [null, Math.random() * window.innerHeight],
+            x: [null, Math.random() * window.innerWidth],
+            rotate: 360
+          }}
+          transition={{ 
+            duration: Math.random() * 20 + 10,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        >
+          {['⭐', '👑', '🎮', '🎵', '🎂'][Math.floor(Math.random() * 5)]}
+        </motion.div>
+      ))} */}
       {[...Array(15)].map((_, i) => (
         <motion.div
           key={i}
@@ -123,274 +133,366 @@ const BirthdayScreen = () => {
           }}
         >
           {i % 2 === 0 ? (
-            <Heart className="w-6 h-6" style={{ color: 'hsl(var(--hot-pink))' }} fill="currentColor" />
+            <MoonStarIcon className="w-6 h-6" style={{ color: 'hsl(var(--hot-pink))' }} fill="currentColor" />
           ) : (
             <Sparkles className="w-5 h-5" style={{ color: 'hsl(var(--baby-blue))' }} />
           )}
         </motion.div>
       ))}
 
-      <div className="relative z-10 px-4 md:px-8 py-16 md:py-24">
+      {/* Mouse Follower Sparkle */}
+      <motion.div
+        className="fixed pointer-events-none z-50"
+        animate={{
+          x: mousePosition.x - 20,
+          y: mousePosition.y - 20,
+        }}
+        transition={{ type: "spring", damping: 30, stiffness: 200 }}
+      >
+        <Sparkles className="text-white/60" size={40} />
+      </motion.div>
+
+      {/* Score Display */}
+      <motion.div
+        className="fixed top-8 right-8 z-50 font-pixel text-yellow-300 text-xl"
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}
+      >
+        SCORE: {score}
+      </motion.div>
+
+      <div className="relative z-10 px-4 py-12 space-y-32">
         {/* Hero Section */}
-        <motion.div
-          initial={{ scale: 0, opacity: 0, y: -50 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          transition={{ type: "spring", duration: 1.5, bounce: 0.5 }}
-          className="text-center mb-16 md:mb-24"
+        <motion.section 
+          className="min-h-screen flex flex-col items-center justify-center text-center space-y-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
         >
           <motion.div
-            animate={{ rotate: [0, 10, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="inline-block mb-6"
-          >
-            <Cake className="w-20 h-20 md:w-32 md:h-32" style={{ color: 'hsl(var(--hot-pink))', filter: 'drop-shadow(0 0 20px hsl(var(--hot-pink)))' }} />
-          </motion.div>
-          
-          <h1 className="font-poppins font-black text-5xl md:text-8xl lg:text-9xl mb-6 md:mb-8 leading-tight">
-            <motion.span 
-              className="block mb-4"
-              animate={{ 
-                scale: [1, 1.03, 1],
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-              style={{
-                background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)), hsl(var(--lavender)))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'drop-shadow(0 0 30px rgba(255, 105, 180, 0.3))'
-              }}
-            >
-              HAPPY
-            </motion.span>
-            <motion.span 
-              className="block"
-              animate={{ 
-                scale: [1, 1.05, 1],
-              }}
-              transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
-              style={{
-                background: 'linear-gradient(135deg, hsl(var(--baby-blue)), hsl(var(--lavender)), hsl(var(--pastel-pink)))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                filter: 'drop-shadow(0 0 30px rgba(135, 206, 235, 0.3))'
-              }}
-            >
-              BIRTHDAY! 
-            </motion.span>
-          </h1>
-
-          <motion.p 
-            className="text-2xl md:text-4xl font-poppins font-light mb-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            style={{ color: 'hsl(var(--lavender))' }}
-          >
-            Oh look, it's Falah's special day! 
-          </motion.p>
-          
-          <motion.button
-            onClick={triggerConfetti}
-            whileHover={{ scale: 1.1, rotate: [0, -5, 5, 0] }}
-            whileTap={{ scale: 0.9 }}
-            className="relative px-10 py-5 text-xl md:text-2xl font-bold font-poppins rounded-full overflow-hidden group cursor-pointer border-4 border-white shadow-2xl"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)))',
+            className="pixel-border p-8 bg-gradient-to-r from-pink-500/80 to-blue-500/80 backdrop-blur-sm"
+            animate={{ 
+              boxShadow: ['0 0 20px rgba(255,105,180,0.5)', '0 0 40px rgba(135,206,235,0.5)', '0 0 20px rgba(255,105,180,0.5)']
             }}
+            transition={{ duration: 2, repeat: Infinity }}
           >
-            <motion.span 
-              className="relative z-10 flex items-center gap-3 text-white"
+            <motion.h1 
+              className="font-pixel text-4xl md:text-7xl text-white mb-4"
+              style={{ textShadow: '6px 6px 0px rgba(0,0,0,0.3)' }}
               animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
-              <PartyPopper className="w-6 h-6" />
-              SPAM CONFETTI!
-              <PartyPopper className="w-6 h-6" />
-            </motion.span>
-          </motion.button>
-        </motion.div>
+              🎮 HAPPY BIRTHDAY! 🎮
+            </motion.h1>
+            <motion.p 
+              className="font-retro text-2xl md:text-4xl text-yellow-300"
+              style={{ textShadow: '3px 3px 0px rgba(0,0,0,0.3)' }}
+            >
+              LEVEL UP ACHIEVED! +1 YEAR
+            </motion.p>
+          </motion.div>
 
-        {/* Sarcastic Messages Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          <motion.div
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Button
+              onClick={triggerConfetti}
+              className="font-pixel text-xl px-12 py-8 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 pixel-border shadow-[8px_8px_0px_rgba(0,0,0,0.3)]"
+            >
+              🎉 PRESS START 🎉
+            </Button>
+          </motion.div>
+
+          <motion.div
+            className="grid grid-cols-3 gap-4 mt-12"
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            {[Gamepad2, Music, Cake].map((Icon, i) => (
+              <motion.div
+                key={i}
+                className="pixel-border p-4 bg-white/10 backdrop-blur-sm"
+                whileHover={{ y: -10, scale: 1.1 }}
+                animate={{ 
+                  y: [0, -10, 0],
+                  rotate: [0, 5, -5, 0]
+                }}
+                transition={{ 
+                  duration: 2,
+                  delay: i * 0.2,
+                  repeat: Infinity 
+                }}
+              >
+                <Icon className="text-white" size={48} />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
+
+        {/* Retro Messages Section */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-20 max-w-6xl mx-auto"
         >
-          {sarcasticMessages.map((msg, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50, rotateX: -20 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15, duration: 0.6 }}
-              whileHover={{ 
-                scale: 1.05, 
-                rotateY: 5,
-                boxShadow: '0 25px 60px rgba(255, 105, 180, 0.4)',
-              }}
-              className="relative group cursor-pointer"
-              style={{ perspective: '1000px' }}
-            >
-              <div 
-                className="relative p-8 rounded-3xl backdrop-blur-xl border-3 transition-all duration-300 overflow-hidden"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.7)',
-                  borderColor: 'rgba(255, 200, 255, 0.5)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            ✨ POWER-UPS UNLOCKED ✨
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
+            {[
+              { icon: "⭐", title: "System Update Required", text: "Selamat! Lu resmi naik versi. Bug masih banyak, fitur baru belum tentu berguna, tapi hey, setidaknya lu masih jalan tanpa eror." },
+              { icon: "👑", title: "Achievement: Still Surviving", text: "Lu berhasil melewati 365 hari penuh drama, random anxiety, overthinking jam 10 malem, dan realitas yang kadang ga sesuai ekspektasi. Proud of you king👑" },
+              { icon: "✨", title: "Worldwide Announcement", text: "Peneliti menemukan spesies langka yang tambah umur tapi tetep keliatan keren. Spoiler: itu lu. Humanity grateful, bumi aman." },
+              { icon: "🌙", title: "Fun Fact of The Day", text: "Semakin tua lu, semakin gede value lu, kaya NFT tapi yang ga scam. Harganya naik karena personality nya, bukan hype doang." }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="pixel-border p-6 bg-gradient-to-br from-purple-500/80 to-pink-500/80 backdrop-blur-sm hover:scale-105 transition-transform cursor-pointer"
+                whileHover={{ 
+                  y: -10,
+                  boxShadow: '12px 12px 0px rgba(0,0,0,0.3)'
                 }}
+                initial={{ scale: 0, rotate: -180 }}
+                whileInView={{ scale: 1, rotate: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, type: "spring" }}
               >
-                {/* Gradient glow on hover */}
-                <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 rounded-3xl"
-                  style={{
-                    background: index % 2 === 0 
-                      ? 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)))' 
-                      : 'linear-gradient(135deg, hsl(var(--lavender)), hsl(var(--pastel-pink)))'
-                  }}
-                />
+                <div className="text-6xl mb-4 text-center">{item.icon}</div>
+                <h3 className="font-pixel text-lg text-yellow-300 mb-2 text-center" style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.3)' }}>
+                  {item.title}
+                </h3>
+                <p className="font-retro text-xl text-white text-center">
+                  {item.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
 
-                <div className="relative z-10">
-                  <motion.div 
-                    className="mb-4"
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: index * 0.2 }}
-                    style={{ color: index % 2 === 0 ? 'hsl(var(--hot-pink))' : 'hsl(var(--baby-blue))' }}
-                  >
-                    {msg.icon}
-                  </motion.div>
-                  
-                  <h3 className="text-2xl md:text-3xl font-bold font-poppins mb-3"
-                    style={{ 
-                      color: index % 2 === 0 ? 'hsl(var(--hot-pink))' : 'hsl(var(--baby-blue))'
-                    }}
-                  >
-                    {msg.title}
-                  </h3>
-                  
-                  <p className="text-base md:text-lg font-poppins text-gray-700 leading-relaxed">
-                    {msg.desc}
-                  </p>
+        {/* Pixel Stats Section */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            📊 PLAYER STATS 📊
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {[
+              { stat: "COOLNESS", value: 99, color: "from-pink-500 to-red-500" },
+              { stat: "SASS LEVEL", value: 100, color: "from-purple-500 to-pink-500" },
+              { stat: "HUMOR", value: 95, color: "from-blue-500 to-cyan-500" },
+              { stat: "VIBES", value: 98, color: "from-yellow-500 to-orange-500" }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="pixel-border p-6 bg-black/40 backdrop-blur-sm"
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.2, type: "spring" }}
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-pixel text-white text-sm">{item.stat}</span>
+                  <span className="font-pixel text-yellow-300 text-sm">{item.value}%</span>
                 </div>
+                <div className="h-6 bg-gray-700 pixel-border overflow-hidden">
+                  <motion.div
+                    className={`h-full bg-gradient-to-r ${item.color}`}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${item.value}%` }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.2 + 0.3, duration: 1 }}
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
 
-                {/* Corner sparkle */}
-                <motion.div
-                  className="absolute top-3 right-3"
-                  animate={{
-                    scale: [1, 1.3, 1],
-                    rotate: [0, 180, 360],
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                >
-                  <Sparkles className="w-6 h-6" style={{ color: 'hsl(var(--sparkle-gold))' }} />
-                </motion.div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* Interactive Quote Section */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+        {/* Coin Collector Game */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="max-w-4xl mx-auto mb-20"
+          transition={{ duration: 0.8 }}
         >
-          <motion.div 
-            className="relative p-10 md:p-16 rounded-[3rem] backdrop-blur-xl border-4 overflow-hidden group cursor-pointer"
-            whileHover={{ scale: 1.02 }}
-            style={{
-              background: 'rgba(255, 255, 255, 0.6)',
-              borderColor: 'rgba(255, 255, 255, 0.8)',
-              boxShadow: '0 20px 60px rgba(255, 105, 180, 0.2)'
-            }}
-          >
-            <motion.div
-              className="absolute inset-0 opacity-0 group-hover:opacity-40 transition-opacity duration-700"
-              style={{
-                background: 'linear-gradient(135deg, hsl(var(--baby-blue)), hsl(var(--lavender)), hsl(var(--pastel-pink)))'
-              }}
-            />
-            
-            <div className="relative z-10 text-center">
-              <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity }}
-                className="mb-6 inline-block"
-              >
-                <Crown className="w-16 h-16" style={{ color: 'hsl(var(--sparkle-gold))', filter: 'drop-shadow(0 0 20px hsl(var(--sparkle-gold)))' }} />
-              </motion.div>
-
-              <h2 className="text-3xl md:text-5xl font-poppins font-black mb-6"
-                style={{
-                  background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--lavender)))',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            🪙 COLLECT COINS! 🪙
+          </h2>
+          <div className="grid grid-cols-3 md:grid-cols-5 gap-4 max-w-4xl mx-auto">
+            {[...Array(10)].map((_, i) => (
+              <motion.button
+                key={i}
+                onClick={collectCoin}
+                className="pixel-border p-8 bg-yellow-400 hover:bg-yellow-300 text-6xl transition-colors"
+                whileHover={{ scale: 1.2, rotate: 360 }}
+                whileTap={{ scale: 0.8 }}
+                animate={{ 
+                  y: [0, -10, 0],
+                  rotate: [0, 10, -10, 0]
+                }}
+                transition={{ 
+                  duration: 2,
+                  delay: i * 0.1,
+                  repeat: Infinity 
                 }}
               >
-                Real Talk Tho
-              </h2>
-              
-              <p className="text-xl md:text-2xl font-poppins leading-relaxed text-gray-800 mb-4">
-                Sure, we joke around. But honestly? 
-              </p>
-              
-              <motion.p 
-                className="text-2xl md:text-3xl font-poppins font-bold leading-relaxed"
-                animate={{ scale: [1, 1.02, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                style={{
-                  background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)))',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
-              >
-                You're kind of amazing, keep believing on yourself! 
-              </motion.p>
+                🪙
+              </motion.button>
+            ))}
+          </div>
+        </motion.section>
 
-              <p className="text-lg md:text-xl font-poppins text-gray-700 mt-4 italic">
-                (Fight your self doubt and procrastination, king.) 😝
-              </p>
-            </div>
-          </motion.div>
-        </motion.div>
-
-        {/* Birthday Wishes */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
+        {/* Achievement Cards */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-6xl font-poppins font-black mb-12"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--baby-blue)), hsl(var(--hot-pink)), hsl(var(--lavender)))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Wishes For You 
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            🏅 ACHIEVEMENTS 🏅
           </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            {[
+              { icon: Trophy, title: "Birthday Royalty", desc: "Resmi naik level lagi, tapi skill point masih misteri." },
+              { icon: Target, title: "Goal Getter", desc: "Udah bikin target… terus lupa… terus bikin target baru. Siklus sehat." },
+              { icon: Flame, title: "Streak Master", desc: "365 hari bertahan dari drama, overthinking, dan hidup. Speedrun-nya GG." },
+              { icon: Gift, title: "Present Collector", desc: "Expert at looking surprised" },
+              { icon: Wand2, title: "Magic Maker", desc: "Bikin hari biasa jadi chaos tapi unik. Literally spellcaster IRL." },
+              { icon: Rocket, title: "Sky Reacher", desc: "Aimed for moon, hit ceiling fan" }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="pixel-border p-6 bg-gradient-to-br from-blue-500/80 to-purple-500/80 backdrop-blur-sm"
+                initial={{ rotateY: -90, opacity: 0 }}
+                whileInView={{ rotateY: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15, type: "spring" }}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '12px 12px 0px rgba(0,0,0,0.3)'
+                }}
+              >
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                >
+                  <item.icon className="text-yellow-300 mx-auto mb-4" size={64} />
+                </motion.div>
+                <h3 className="font-pixel text-white text-center mb-2" style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.3)' }}>
+                  {item.title}
+                </h3>
+                <p className="font-retro text-xl text-white/90 text-center">
+                  {item.desc}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* Fortune Cookie Predictions */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            🔮 BIRTHDAY PREDICTIONS 🔮
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            {[
+              { icon: "🙏", prediction: "Tahun ini lu bakal niat mulai hidup produktif. Niatnya besar. Eksekusinya… ya nanti liat aja." },
+              { icon: "📱", prediction: "Akan ada pesan penting masuk. Setelah dicek… promo marketplace. Lagi. Selalu." },
+              { icon: "🎯", prediction: "Lu bakal mencapai sesuatu yang besar tahun ini. Masalahnya, kita semua belum tau apaan." },
+              { icon: "📺", prediction: "To do list lu bakal makin panjang. Lu tambahin doang, Lakuinnya enggak." }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="pixel-border p-6 bg-gradient-to-br from-purple-500/80 to-pink-500/80 backdrop-blur-sm"
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{ scale: 1, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.15, type: "spring" }}
+                whileHover={{ 
+                  scale: 1.05,
+                  rotate: 3
+                }}
+              >
+                <motion.div
+                  className="text-6xl mb-4 text-center"
+                  animate={{ 
+                    rotate: [0, 10, -10, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
+                >
+                  {item.icon}
+                </motion.div>
+                <p className="font-retro text-xl text-white text-center leading-relaxed">
+                  {item.prediction}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
+        {/* Birthday Wishes Section */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="font-pixel text-4xl text-center text-white mb-8" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            💫 WISHES FOR YOU 💫
+          </h2>
+          <motion.div
+            className="max-w-3xl mx-auto pixel-border p-8 bg-gradient-to-br from-pink-500/80 to-blue-500/80 backdrop-blur-sm mb-12"
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <motion.p
+              className="font-retro text-2xl text-white text-center leading-relaxed"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              Semoga lu makin percaya sama diri lu sendiri. Karena kalo lu masih nggak percaya… ya gimana? Masa gw mulu yang percaya.
+              <br />
+              <span className="font-pixel text-yellow-300">
+                (Im counting on you)
+              </span>
+            </motion.p>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
-              { emoji: "🌟", text: "Semoga tahun ini otak lu nge-load lebih cepet dari WiFi kosan jam 2 pagi. Minimal ga ngelag pas belajar lah." },
-              { emoji: "🎯", text: "Semoga lu akhirnya ngerti cara percaya diri tanpa harus gw tendang dulu mental lu biar maju." },
+              { emoji: "🌟", text: "Semoga tahun ini otak lu nge-load lebih cepet dari WiFi jam 2 pagi. Minimal ga ngelag pas belajar lah." },
+              { emoji: "🎯", text: "Semoga lu akhirnya ngerti cara percaya diri tanpa harus didorong maju dulu😁." },
               { emoji: "💰", text: "Semoga saldo lu naik terus dan cicilan mental lu turun. Hidup udah susah, jangan ditambah beban sendiri." },
               { emoji: "😴", text: "Semoga lu bisa tidur bener. Bukan tidur jam 3, bangun jam 7, terus bilang 'kok pusing ya'." },
               { emoji: "🧠", text: "Semoga lu sadar kalo lu nggak se-'lemot' yang lu kira. Otak lu cuma suka warming up dulu kayak motor carb." },
               { emoji: "🍕", text: "Semoga semua makanan favorit lu auto nol kalori. Biar lu makan santai tanpa self-hate 5 menit setelahnya." },
               { emoji: "✨", text: "Semoga vibe lu tetep se-unik itu. Dunia butuh orang random tapi wholesome kayak lu." },
               { emoji: "🔥", text: "Semoga semangat lu nggak mati tengah jalan. Kalo mati? Yaudah tinggal gw jumper lagi." },
-              { emoji: "🚀", text: "Semoga lu makin berani nyoba hal baru. Kalo takut? Tenang… lu kan udah biasa takut duluan." },
+              { emoji: "🚀", text: "Semoga lu makin berani nyoba hal baru. Kalo takut? Tenang… lu kan udah biasa takut duluan." }
             ].map((wish, index) => (
               <motion.div
                 key={index}
@@ -399,628 +501,233 @@ const BirthdayScreen = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
                 whileHover={{ 
-                  scale: 1.1, 
-                  rotate: [0, -3, 3, 0],
-                  boxShadow: '0 20px 40px rgba(135, 206, 235, 0.3)'
+                  scale: 1.05,
+                  rotate: [0, -2, 2, 0]
                 }}
-                className="p-6 rounded-2xl backdrop-blur-xl cursor-pointer"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.5)',
-                  border: '2px solid rgba(255, 200, 255, 0.3)'
-                }}
+                className="pixel-border p-6 bg-white/10 backdrop-blur-sm cursor-pointer"
               >
                 <motion.div 
-                  className="text-5xl mb-3"
+                  className="text-5xl mb-3 text-center"
                   animate={{ 
                     rotate: [0, 10, -10, 0],
-                    scale: [1, 1.2, 1]
+                    scale: [1, 1.15, 1]
                   }}
                   transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
                 >
                   {wish.emoji}
                 </motion.div>
-                <p className="text-base md:text-lg font-poppins text-gray-700 leading-snug">
+                <p className="font-retro text-xl text-white text-center leading-snug">
                   {wish.text}
                 </p>
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </motion.section>
 
-        {/* Epic Finale */}
-        <motion.div
+        {/* Reasons You're Awesome */}
+        <motion.section
+          className="space-y-8"
           initial={{ opacity: 0, y: 100 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1.2 }}
-          className="text-center py-16 mb-20"
-        >
-          <motion.div
-            animate={{ 
-              scale: [1, 1.1, 1],
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-            className="mb-8"
-          >
-            <PartyPopper className="w-24 h-24 mx-auto" style={{ color: 'hsl(var(--hot-pink))', filter: 'drop-shadow(0 0 30px hsl(var(--hot-pink)))' }} />
-          </motion.div>
-
-          <motion.h2 
-            className="text-4xl md:text-7xl font-poppins font-black mb-6"
-            animate={{ 
-              backgroundPosition: ['0%', '100%', '0%'],
-            }}
-            transition={{ duration: 5, repeat: Infinity }}
-            style={{
-              background: 'linear-gradient(90deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)), hsl(var(--lavender)), hsl(var(--pastel-pink)), hsl(var(--hot-pink)))',
-              backgroundSize: '200% 100%',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              filter: 'drop-shadow(0 0 40px rgba(255, 105, 180, 0.3))'
-            }}
-          >
-            TODAY, YOU'RE THE MAIN CHARACTER, KING.
-          </motion.h2>
-          
-          <motion.p
-            className="text-xl md:text-3xl font-poppins font-light max-w-3xl mx-auto"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 }}
-            style={{ color: 'hsl(var(--lavender))' }}
-          >
-            Semoga lu makin percaya sama diri lu sendiri. Karena kalo lu masih nggak percaya… ya gimana? Masa gw mulu yang percaya. 
-            <br />
-            <span className="font-bold" style={{ color: 'hsl(var(--hot-pink))' }}>
-              (Im counting on you) 
-            </span>
-          </motion.p>
-        </motion.div>
-
-        {/* Stats Counter Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="mb-20"
         >
-          <h2 className="text-4xl md:text-6xl font-poppins font-black mb-12 text-center"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Your Year In Numbers 
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            💯 WHY YOU&apos;RE AWESOME 💯
           </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {[
-              { icon: <Coffee />, value: "365", label: "Cups of Coffee", suffix: "+" },
-              { icon: <Music />, value: "1,247", label: "Songs Played" },
-              { icon: <Smile />, value: "892", label: "Laughs Shared" },
-              { icon: <Zap />, value: "∞", label: "Main Character Moments" },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.5, rotateY: -90 }}
-                whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                whileHover={{ 
-                  scale: 1.1, 
-                  y: -10,
-                  boxShadow: '0 20px 40px rgba(255, 105, 180, 0.4)'
-                }}
-                className="relative p-8 rounded-3xl backdrop-blur-xl text-center group cursor-pointer"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.6)',
-                  border: '3px solid rgba(255, 200, 255, 0.4)'
-                }}
-              >
-                <motion.div
-                  className="mb-4 mx-auto w-fit"
-                  animate={{ rotate: [0, 10, -10, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.2 }}
-                  style={{ color: index % 2 === 0 ? 'hsl(var(--hot-pink))' : 'hsl(var(--baby-blue))' }}
-                >
-                  {React.cloneElement(stat.icon, { className: "w-12 h-12" })}
-                </motion.div>
-
-                <motion.div 
-                  className="text-4xl md:text-5xl font-poppins font-black mb-2"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                  style={{
-                    background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)))',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  {stat.value}{stat.suffix}
-                </motion.div>
-
-                <div className="text-sm md:text-base font-poppins font-semibold text-gray-700">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Personality Progress Bars */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mb-20 max-w-4xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-poppins font-black mb-12 text-center"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--lavender)), hsl(var(--pastel-pink)))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Character Stats 
-          </h2>
-
-          <div className="space-y-6">
-            {[
-              { label: "Charisma", value: 95, icon: <Sparkles className="w-6 h-6" /> },
-              { label: "Humor", value: 88, icon: <Smile className="w-6 h-6" /> },
-              { label: "Intelligence", value: 92, icon: <Star className="w-6 h-6" /> },
-              { label: "Kindness", value: 97, icon: <Heart className="w-6 h-6" /> },
-              { label: "Energy", value: 85, icon: <Zap className="w-6 h-6" /> },
-              { label: "Main Character Energy", value: 100, icon: <Crown className="w-6 h-6" /> },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="relative"
-              >
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-3">
-                    <span style={{ color: 'hsl(var(--hot-pink))' }}>
-                      {stat.icon}
-                    </span>
-                    <span className="text-lg md:text-xl font-poppins font-bold text-gray-800">
-                      {stat.label}
-                    </span>
-                  </div>
-                  <span className="text-lg md:text-xl font-poppins font-bold"
-                    style={{ color: 'hsl(var(--baby-blue))' }}
-                  >
-                    {stat.value}%
-                  </span>
-                </div>
-
-                <div className="h-4 rounded-full overflow-hidden"
-                  style={{ background: 'rgba(200, 200, 255, 0.3)' }}
-                >
-                  <motion.div
-                    className="h-full rounded-full relative overflow-hidden"
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${stat.value}%` }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 + 0.3, duration: 1, ease: "easeOut" }}
-                    style={{
-                      background: 'linear-gradient(90deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)), hsl(var(--lavender)))'
-                    }}
-                  >
-                    <motion.div
-                      className="absolute inset-0"
-                      animate={{
-                        backgroundPosition: ['0% 0%', '100% 0%']
-                      }}
-                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                      style={{
-                        background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent)',
-                        backgroundSize: '50% 100%'
-                      }}
-                    />
-                  </motion.div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Fortune Cookie Section */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mb-20 max-w-4xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-poppins font-black mb-12 text-center"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--baby-blue)), hsl(var(--hot-pink)))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Birthday Predictions 
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[
-              { 
-                prediction: "Tahun ini lu bakal niat mulai hidup produktif. Niatnya besar. Eksekusinya… ya nanti liat aja.",
-                emoji: "🙏"
-              },
-              { 
-                prediction: "Akan ada pesan penting masuk. Setelah dicek… promo marketplace. Lagi. Selalu.",
-                emoji: "📱"
-              },
-              { 
-                prediction: "Lu bakal mencapai sesuatu yang besar tahun ini. Masalahnya, kita semua belum tau apaan.",
-                emoji: "🎯"
-              },
-              { 
-                prediction: "To do list lu bakal makin panjang. Lu tambahin doang, Lakuinnya enggak.",
-                emoji: "📺"
-              }
-            ].map((fortune, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, rotateY: -180 }}
-                whileInView={{ opacity: 1, rotateY: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15, duration: 0.8 }}
-                whileHover={{ 
-                  rotateY: 10,
-                  scale: 1.05,
-                  boxShadow: '0 25px 50px rgba(135, 206, 235, 0.4)'
-                }}
-                className="relative p-8 rounded-3xl backdrop-blur-xl cursor-pointer"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.7)',
-                  border: '3px solid rgba(255, 200, 255, 0.5)',
-                  transformStyle: 'preserve-3d'
-                }}
-              >
-                <motion.div 
-                  className="text-6xl mb-4 text-center"
-                  animate={{ 
-                    rotate: [0, 10, -10, 0],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity, delay: index * 0.5 }}
-                >
-                  {fortune.emoji}
-                </motion.div>
-
-                <p className="text-base md:text-lg font-poppins text-gray-700 text-center leading-relaxed">
-                  {fortune.prediction}
-                </p>
-
-                <motion.div
-                  className="absolute top-2 right-2"
-                  animate={{ rotate: [0, 360] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                >
-                  <Sparkles className="w-5 h-5" style={{ color: 'hsl(var(--sparkle-gold))' }} />
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Achievements Unlocked */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mb-20"
-        >
-          <h2 className="text-4xl md:text-6xl font-poppins font-black mb-12 text-center"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--pastel-pink)), hsl(var(--lavender)))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-             Achievements Unlocked 
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {[
-              { icon: <Trophy />, title: "Birthday Royalty", desc: "Survived another year of chaos" },
-              { icon: <Target />, title: "Goal Getter", desc: "Set goals. Forgot them. Set new ones." },
-              { icon: <Flame />, title: "Streak Master", desc: "365 consecutive days of existing" },
-              { icon: <Gift />, title: "Present Collector", desc: "Expert at looking surprised" },
-              { icon: <Wand2 />, title: "Magic Maker", desc: "Made everyday moments legendary" },
-              { icon: <Rocket />, title: "Sky Reacher", desc: "Aimed for moon, hit ceiling fan" },
-            ].map((achievement, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0, rotateZ: -180 }}
-                whileInView={{ opacity: 1, scale: 1, rotateZ: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  delay: index * 0.1, 
-                  duration: 0.6,
-                  type: "spring",
-                  stiffness: 200
-                }}
-                whileHover={{ 
-                  scale: 1.1,
-                  rotateZ: [0, -5, 5, 0],
-                  boxShadow: '0 20px 40px rgba(255, 105, 180, 0.4)'
-                }}
-                className="relative p-6 rounded-2xl backdrop-blur-xl text-center group cursor-pointer overflow-hidden"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.6)',
-                  border: '3px solid rgba(255, 200, 255, 0.4)'
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(255, 105, 180, 0.2), rgba(135, 206, 235, 0.2))'
-                  }}
-                />
-
-                <motion.div
-                  className="relative z-10 mb-4 mx-auto w-fit p-4 rounded-full"
-                  animate={{ 
-                    rotate: [0, 360],
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{ 
-                    rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 2, repeat: Infinity }
-                  }}
-                  style={{ 
-                    background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)))',
-                    boxShadow: '0 0 20px rgba(255, 105, 180, 0.5)'
-                  }}
-                >
-                  {React.cloneElement(achievement.icon, { 
-                    className: "w-10 h-10",
-                    color: "white"
-                  })}
-                </motion.div>
-
-                <h3 className="relative z-10 text-xl md:text-2xl font-poppins font-bold mb-2"
-                  style={{ color: 'hsl(var(--hot-pink))' }}
-                >
-                  {achievement.title}
-                </h3>
-
-                <p className="relative z-10 text-sm md:text-base font-poppins text-gray-700">
-                  {achievement.desc}
-                </p>
-
-                <motion.div
-                  className="absolute -bottom-2 -right-2"
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotate: [0, 180, 360]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                >
-                  <Star className="w-8 h-8" style={{ color: 'hsl(var(--sparkle-gold))' }} fill="currentColor" />
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Reasons You're Awesome */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="mb-20 max-w-5xl mx-auto"
-        >
-          <h2 className="text-4xl md:text-6xl font-poppins font-black mb-12 text-center"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--baby-blue)), hsl(var(--hot-pink)))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Why You're Actually Amazing 
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               "Lu punya bakat spesial: bikin hidup chaos tapi somehow tetep jalan. Aneh, tapi works.",
               "Insting lu tuh 50% genius, 50% hoki. Persentasenya berubah tiap hari.",
-              "Keputusan-keputusan lu selalu bikin gue mikir, ‘ini jenius apa ngasal?’. Jawabannya: yes.",
+              "Keputusan-keputusan lu selalu bikin gw mikir, 'ini jenius apa ngasal?'. Jawabannya: yes.",
               "Lu punya talent bikin situasi awkward jadi… slightly less awkward. Improvement is improvement.",
               "Sense of humor lu tuh kayak bug di software: ga masuk akal, tapi bikin orang ketawa.",
-              "Energy lu tuh ‘capek tapi tetep menang’. Respect, honestly."
-            ].map((reason, index) => (
+              "Energy lu tuh 'capek tapi tetep menang'. Respect, honestly."
+            ].map((reason, i) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                key={i}
+                className="pixel-border p-6 bg-gradient-to-br from-yellow-400/80 to-orange-500/80 backdrop-blur-sm"
+                initial={{ x: i % 2 === 0 ? -100 : 100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1, duration: 0.6 }}
-                whileHover={{ 
-                  scale: 1.05,
-                  rotateZ: index % 2 === 0 ? -2 : 2
-                }}
-                className="relative p-6 rounded-2xl backdrop-blur-xl cursor-pointer"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.7)',
-                  border: '3px solid rgba(255, 200, 255, 0.4)'
-                }}
+                transition={{ delay: i * 0.1, type: "spring" }}
+                whileHover={{ scale: 1.05 }}
               >
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: index * 0.3 }}
-                  className="absolute -top-3 -left-3 w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)))' }}
-                >
-                  <Sparkles className="w-4 h-4 text-white" fill="white" />
-                </motion.div>
-
-                <p className="text-lg md:text-xl font-poppins text-gray-800 pl-4">
+                <p className="font-retro text-xl text-white text-center leading-relaxed">
                   {reason}
                 </p>
-
-                {index === 5 && (
-                  <p className="text-sm font-poppins text-gray-500 italic mt-2 pl-4">
-                    *walau hobi procrastinate sama self doubt but whatever
-                  </p>
-                )}
               </motion.div>
             ))}
           </div>
-        </motion.div>
+        </motion.section>
 
-        {/* Virtual Birthday Cake */}
-        <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          whileInView={{ opacity: 1, y: 0 }}
+        {/* Pixel Art Cake */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, scale: 0 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="mb-20 text-center"
+          transition={{ duration: 0.8, type: "spring" }}
         >
-          <h2 className="text-4xl md:text-6xl font-poppins font-black mb-12"
-            style={{
-              background: 'linear-gradient(135deg, hsl(var(--lavender)), hsl(var(--pastel-pink)))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            Make a Wish! 
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            🎂 CLICK THE CAKE! 🎂
           </h2>
-
           <motion.div
-            className="relative inline-block"
-            whileHover={{ scale: 1.05 }}
+            className="max-w-md mx-auto pixel-border p-12 bg-gradient-to-br from-pink-500/80 to-purple-500/80 backdrop-blur-sm cursor-pointer"
+            whileHover={{ scale: 1.05, rotate: 5 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={triggerConfetti}
           >
             <motion.div
+              className="text-center text-9xl"
               animate={{ 
-                rotateY: [0, 360],
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0]
               }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              className="relative"
-              style={{ transformStyle: 'preserve-3d' }}
+              transition={{ duration: 2, repeat: Infinity }}
             >
-              <Cake 
-                className="w-48 h-48 md:w-64 md:h-64 mx-auto cursor-pointer" 
-                style={{ 
-                  color: 'hsl(var(--hot-pink))',
-                  filter: 'drop-shadow(0 0 40px hsl(var(--hot-pink)))'
-                }} 
-                onClick={triggerConfetti}
-              />
-
+              🎂
+            </motion.div>
+            <div className="flex justify-center gap-4 mt-8">
               {[...Array(5)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute"
-                  style={{
-                    left: `${30 + i * 10}%`,
-                    top: '10%',
-                  }}
-                  animate={{
+                  className="text-4xl"
+                  animate={{ 
                     y: [0, -10, 0],
-                    opacity: [1, 0.5, 1],
-                    scale: [1, 1.2, 1]
+                    opacity: [1, 0.5, 1]
                   }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    delay: i * 0.2
+                  transition={{ 
+                    duration: 1,
+                    delay: i * 0.1,
+                    repeat: Infinity 
                   }}
                 >
-                  <Flame className="w-6 h-6" style={{ color: 'hsl(var(--peach))' }} />
+                  🕯️
                 </motion.div>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
+        </motion.section>
 
-          <motion.p
-            className="text-xl md:text-2xl font-poppins mt-8 text-gray-700"
-            animate={{ opacity: [0.6, 1, 0.6] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            Click the cake to blow out the candles! 🕯️
-          </motion.p>
-        </motion.div>
+        {/* Power-Up Items */}
+        <motion.section
+          className="space-y-8"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
+            🎁 BIRTHDAY LOOT 🎁
+          </h2>
+          <div className="flex flex-wrap justify-center gap-6 max-w-4xl mx-auto">
+            {[Gift, Pizza, Coffee, Music, PartyPopper, Sparkles].map((Icon, i) => (
+              <motion.div
+                key={i}
+                className="pixel-border p-8 bg-gradient-to-br from-yellow-400 to-orange-500 cursor-pointer"
+                whileHover={{ 
+                  scale: 1.2,
+                  rotate: 360,
+                  boxShadow: '12px 12px 0px rgba(0,0,0,0.3)'
+                }}
+                whileTap={{ scale: 0.8 }}
+                animate={{ 
+                  y: [0, -15, 0],
+                  rotate: [0, 10, -10, 0]
+                }}
+                transition={{ 
+                  duration: 2,
+                  delay: i * 0.2,
+                  repeat: Infinity 
+                }}
+              >
+                <Icon size={64} className="text-white" />
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
 
-        {/* Final Message */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+        {/* Epic Finale */}
+        <motion.section
+          className="min-h-screen flex flex-col items-center justify-center space-y-12"
+          initial={{ opacity: 0, scale: 0.5 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="text-center py-20"
+          transition={{ duration: 1, type: "spring" }}
         >
           <motion.div
+            className="pixel-border p-12 bg-gradient-to-r from-pink-500/90 to-purple-500/90 backdrop-blur-sm max-w-3xl"
             animate={{ 
-              rotate: [0, 360],
+              boxShadow: [
+                '0 0 40px rgba(255,105,180,0.8)',
+                '0 0 80px rgba(135,206,235,0.8)',
+                '0 0 40px rgba(255,105,180,0.8)'
+              ]
             }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-            className="mb-8"
-          >
-            <Crown className="w-32 h-32 mx-auto" 
-              style={{ 
-                color: 'hsl(var(--sparkle-gold))', 
-                filter: 'drop-shadow(0 0 40px hsl(var(--sparkle-gold)))' 
-              }} 
-            />
-          </motion.div>
-
-          <motion.h2 
-            className="text-5xl md:text-8xl font-poppins font-black mb-8"
-            animate={{ 
-              scale: [1, 1.02, 1],
-            }}
-            transition={{ duration: 3, repeat: Infinity }}
-            style={{
-              background: 'linear-gradient(90deg, hsl(var(--hot-pink)), hsl(var(--baby-blue)), hsl(var(--lavender)), hsl(var(--hot-pink)))',
-              backgroundSize: '200% 100%',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              filter: 'drop-shadow(0 0 50px rgba(255, 105, 180, 0.4))'
-            }}
-          >
-            YOU'RE LEGENDARY
-          </motion.h2>
-          
-          <motion.p
-            className="text-2xl md:text-4xl font-poppins font-light max-w-4xl mx-auto mb-8"
-            style={{ color: 'hsl(var(--lavender))' }}
-          >
-            Here's to another year of being absolutely iconic, completely unforgettable, and ridiculously fabulous.
-          </motion.p>
-
-          <motion.p
-            className="text-xl md:text-2xl font-poppins max-w-3xl mx-auto"
-            style={{ color: 'hsl(var(--hot-pink))' }}
-            animate={{ opacity: [0.7, 1, 0.7] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            Now stop reading and go celebrate! Sorry for the Corny message tho 🎉✨
-          </motion.p>
-        </motion.div>
+            <motion.h2 
+              className="font-pixel text-3xl md:text-5xl text-center text-white mb-8"
+              style={{ textShadow: '6px 6px 0px rgba(0,0,0,0.3)' }}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              YOU&apos;RE LEGENDARY
+            </motion.h2>
+            
+            <p className="font-retro text-2xl md:text-3xl text-center text-white leading-relaxed mb-6">
+              Selamat datang di season baru hidup lu, masih ikonik, masih fabulous, masih bikin orang mikir &quot;gimana caranya lu tetep keren sambil chaos&quot;.
+            </p>
+
+            <p className="font-retro text-xl md:text-2xl text-center text-yellow-300 mb-6">
+              Oh iya, 10 hari lagi UTS, jadi jangan terlalu shining shimmering splendid sampe lupa belajar, king.
+            </p>
+
+            <motion.p
+              className="font-retro text-2xl md:text-3xl text-center text-yellow-300"
+              /* style={{ color: 'hsl(var(--pixel-yellow))' }} */
+              animate={{ opacity: [0.7, 1, 0.7] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              Now stop reading and go celebrate! Sorry for the Corny message tho 🎉✨
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            className="flex gap-6"
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+          >
+            {[PartyPopper, Cake, StarIcon].map((Icon, i) => (
+              <motion.div
+                key={i}
+                animate={{ 
+                  y: [0, -30, 0],
+                  rotate: [0, 360]
+                }}
+                transition={{ 
+                  duration: 3,
+                  delay: i * 0.3,
+                  repeat: Infinity 
+                }}
+              >
+                <Icon size={80} className="text-white" />
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.section>
       </div>
+
+      <style>{`
+        .pixel-border {
+          border: 4px solid #fff;
+          box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.3);
+          image-rendering: pixelated;
+        }
+      `}</style>
     </div>
   );
 };
