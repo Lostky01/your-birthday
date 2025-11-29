@@ -467,21 +467,7 @@ const BirthdayScreen = () => {
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
           >
-            <motion.p
-              className="font-retro text-2xl text-white text-center leading-relaxed"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.5 }}
-            >
-              Semoga lu makin percaya sama diri lu sendiri. Karena kalo lu masih nggak percaya… ya gimana? Masa gw mulu yang percaya.
-              <br />
-              <span className="font-pixel text-yellow-300">
-                (Im counting on you)
-              </span>
-            </motion.p>
-          </motion.div>
-
+            
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               { emoji: "🌟", text: "Semoga tahun ini otak lu nge-load lebih cepet dari WiFi jam 2 pagi. Minimal ga ngelag pas belajar lah." },
@@ -522,6 +508,20 @@ const BirthdayScreen = () => {
               </motion.div>
             ))}
           </div>
+          <motion.p
+              className="font-retro text-2xl text-white text-center leading-relaxed"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.5 }}
+            >
+              Semoga lu makin percaya sama diri lu sendiri. Karena kalo lu masih nggak percaya… ya gimana? Masa gw mulu yang percaya.
+              <br />
+              <span className="font-pixel text-yellow-300">
+                (Im counting on you)
+              </span>
+            </motion.p>
+          </motion.div>
         </motion.section>
 
         {/* Reasons You're Awesome */}
