@@ -185,7 +185,7 @@ const BirthdayScreen = () => {
               className="font-retro text-2xl md:text-4xl   text-yellow-300"
               style={{ textShadow: '3px 3px 0px rgba(0,0,0,0.3)' }}
             >
-              FALAH LEVEL UP ! +1 YEAR
+              OH LOOK, IT&apos;S FALAH&apos;S SPECIAL DAY
             </motion.p>
           </motion.div>
 
