@@ -189,7 +189,7 @@ const BirthdayScreen = () => {
             </motion.p>
           </motion.div>
 
-         <motion.div
+          <motion.div
               whileHover={{ scale: 1.05, rotate: 2 }}
               whileTap={{ scale: 0.95 }}
               className="w-full flex justify-center" // Added for center alignment
@@ -461,13 +461,7 @@ const BirthdayScreen = () => {
           <h2 className="font-pixel text-4xl text-center text-white mb-8" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
             WISHES FOR YOU
           </h2>
-          <motion.div
-            className="max-w-3xl mx-auto pixel-border p-8 bg-gradient-to-br from-pink-500/80 to-blue-500/80 backdrop-blur-sm mb-12"
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
               { emoji: "🌟", text: "Semoga tahun ini otak lu nge-load lebih cepet dari WiFi jam 2 pagi. Minimal ga ngelag pas belajar lah." },
@@ -508,7 +502,14 @@ const BirthdayScreen = () => {
               </motion.div>
             ))}
           </div>
-          <motion.p
+
+           <motion.div
+            className="max-w-3xl mx-auto pixel-border p-8 bg-gradient-to-br from-pink-500/80 to-blue-500/80 backdrop-blur-sm mb-12"
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <motion.p
               className="font-retro text-2xl text-white text-center leading-relaxed"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
