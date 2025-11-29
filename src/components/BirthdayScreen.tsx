@@ -189,16 +189,20 @@ const BirthdayScreen = () => {
             </motion.p>
           </motion.div>
 
-          <motion.div
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.9 }}
+         <motion.div
+              whileHover={{ scale: 1.05, rotate: 2 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full flex justify-center" // Added for center alignment
           >
-            <Button
-              onClick={triggerConfetti}
-              className="font-pixel text-xl px-12 py-8 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 pixel-border shadow-[8px_8px_0px_rgba(0,0,0,0.3)]"
-            >
-              🎉 SPAM CONFETTI 🎉
-            </Button>
+              <Button
+                  onClick={triggerConfetti}
+                  className="font-pixel text-lg sm:text-xl px-6 py-4 sm:px-12 sm:py-8 
+                             bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 
+                             pixel-border shadow-[4px_4px_0px_rgba(0,0,0,0.3)] sm:shadow-[8px_8px_0px_rgba(0,0,0,0.3)]
+                             max-w-xs sm:max-w-md w-auto" 
+              >
+                  🎉 SPAM CONFETTI 🎉
+              </Button>
           </motion.div>
 
           <motion.div
