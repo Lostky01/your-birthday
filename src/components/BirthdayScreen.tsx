@@ -22,6 +22,7 @@ import {
   Target,
   Flame,
   Wand2,
+  Snowflake,
   StarIcon,
   MoonStarIcon
 } from "lucide-react";
@@ -47,11 +48,12 @@ const BirthdayScreen = () => {
   }, []);
 
   const triggerConfetti = () => {
-    const count = 200;
+    const count = 500;
     const defaults = {
       origin: { y: 0.7 },
       colors: ['#FF69B4', '#87CEEB', '#DDA0DD', '#FFB6C1', '#B0E0E6']
     };
+    
 
     function fire(particleRatio: number, opts: any) {
       confetti({
@@ -68,6 +70,10 @@ const BirthdayScreen = () => {
     fire(0.1, { spread: 120, startVelocity: 45 });
   };
 
+  useEffect(() => {
+        triggerConfetti(); 
+    }, []);
+
   const collectCoin = () => {
     setScore(score + 100);
     confetti({
@@ -80,7 +86,6 @@ const BirthdayScreen = () => {
 
   return (
     <div ref={containerRef} className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#FF69B4] via-[#DDA0DD] to-[#87CEEB]">
-      {/* Pixel Grid Background */}
       <div className="absolute inset-0 opacity-10">
         <div className="grid grid-cols-20 grid-rows-20 h-full w-full">
           {Array.from({ length: 400 }).map((_, i) => (
@@ -89,56 +94,47 @@ const BirthdayScreen = () => {
         </div>
       </div>
 
-      {/* Floating Pixel Elements */}
-      {/* {[...Array(20)].map((_, i) => (
-        <motion.div
-          key={`pixel-${i}`}
-          className="absolute text-4xl"
-          initial={{ 
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            rotate: 0
-          }}
-          animate={{ 
-            y: [null, Math.random() * window.innerHeight],
-            x: [null, Math.random() * window.innerWidth],
-            rotate: 360
-          }}
-          transition={{ 
-            duration: Math.random() * 20 + 10,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        >
-          {['⭐', '👑', '🎮', '🎵', '🎂'][Math.floor(Math.random() * 5)]}
-        </motion.div>
-      ))} */}
-      {[...Array(15)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute"
-          style={{
+      {[...Array(30)].map((_, i) => (
+    <motion.div
+        key={i}
+        className="absolute"
+        style={{
+            // Using '%' for responsiveness and performance
             left: `${Math.random() * 100}%`,
             top: `${Math.random() * 100}%`,
-          }}
-          animate={{
+        }}
+        animate={{
             y: [0, -40, 0],
             rotate: [0, 360],
-            opacity: [0.2, 0.8, 0.2],
-          }}
-          transition={{
+            opacity: [0.1, 0.7, 0.1],
+        }}
+        transition={{
             duration: 4 + Math.random() * 3,
             repeat: Infinity,
             delay: Math.random() * 2,
-          }}
-        >
-          {i % 2 === 0 ? (
-            <MoonStarIcon className="w-6 h-6" style={{ color: 'hsl(var(--hot-pink))' }} fill="currentColor" />
-          ) : (
-            <Sparkles className="w-5 h-5" style={{ color: 'hsl(var(--baby-blue))' }} />
-          )}
-        </motion.div>
-      ))}
+        }}
+    >
+        {/* Expanded Icon Selection and Random Size */}
+        {(() => {
+            const icons = [MoonStarIcon, Sparkles, Cloud, Star, Snowflake, Zap];
+            const IconComponent = icons[i % icons.length];
+            // Randomize size between w-4/h-4 and w-7/h-7
+            const size = Math.floor(Math.random() * 10) + 10; 
+            
+            const color = i % 2 === 0 
+                ? 'hsl(var(--pixel-yellow))' 
+                : 'hsl(var(--pixel-yellow))';
+
+            return (
+                <IconComponent 
+                    className={`w-${size} h-${size}`} 
+                    style={{ color: color }} 
+                    fill={i % 3 === 0 ? "currentColor" : "none"} // Fill some icons
+                />
+            );
+        })()}
+    </motion.div>
+))}
 
       {/* Mouse Follower Sparkle */}
       <motion.div
@@ -178,18 +174,18 @@ const BirthdayScreen = () => {
             transition={{ duration: 2, repeat: Infinity }}
           >
             <motion.h1 
-              className="font-pixel text-4xl md:text-7xl text-white mb-4"
+              className="font-pixel text-4xl md:text-7xl sm:text-5xl text-white mb-4"
               style={{ textShadow: '6px 6px 0px rgba(0,0,0,0.3)' }}
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              🎮 HAPPY BIRTHDAY! 🎮
+              HAPPY BIRTHDAY!
             </motion.h1>
             <motion.p 
-              className="font-retro text-2xl md:text-4xl text-yellow-300"
+              className="font-retro text-2xl md:text-4xl   text-yellow-300"
               style={{ textShadow: '3px 3px 0px rgba(0,0,0,0.3)' }}
             >
-              LEVEL UP ACHIEVED! +1 YEAR
+              FALAH LEVEL UP ! +1 YEAR
             </motion.p>
           </motion.div>
 
@@ -201,7 +197,7 @@ const BirthdayScreen = () => {
               onClick={triggerConfetti}
               className="font-pixel text-xl px-12 py-8 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 pixel-border shadow-[8px_8px_0px_rgba(0,0,0,0.3)]"
             >
-              🎉 PRESS START 🎉
+              🎉 SPAM CONFETTI 🎉
             </Button>
           </motion.div>
 
@@ -241,7 +237,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            ✨ POWER-UPS UNLOCKED ✨
+            POWER-UPS UNLOCKED 
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
             {[
@@ -283,7 +279,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            📊 PLAYER STATS 📊
+            PLAYER STATS
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {[
@@ -327,7 +323,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            🪙 COLLECT COINS! 🪙
+            COLLECT COINS!
           </h2>
           <div className="grid grid-cols-3 md:grid-cols-5 gap-4 max-w-4xl mx-auto">
             {[...Array(10)].map((_, i) => (
@@ -362,7 +358,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            🏅 ACHIEVEMENTS 🏅
+            ACHIEVEMENTS
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
@@ -411,7 +407,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            🔮 BIRTHDAY PREDICTIONS 🔮
+            BIRTHDAY PREDICTIONS
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {[
@@ -459,7 +455,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-8" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            💫 WISHES FOR YOU 💫
+            WISHES FOR YOU
           </h2>
           <motion.div
             className="max-w-3xl mx-auto pixel-border p-8 bg-gradient-to-br from-pink-500/80 to-blue-500/80 backdrop-blur-sm mb-12"
@@ -533,7 +529,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            💯 WHY YOU&apos;RE AWESOME 💯
+            WHY YOU&apos;RE AWESOME
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
@@ -570,7 +566,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8, type: "spring" }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            🎂 CLICK THE CAKE! 🎂
+            CLICK THE CAKE!
           </h2>
           <motion.div
             className="max-w-md mx-auto pixel-border p-12 bg-gradient-to-br from-pink-500/80 to-purple-500/80 backdrop-blur-sm cursor-pointer"
@@ -619,7 +615,7 @@ const BirthdayScreen = () => {
           transition={{ duration: 0.8 }}
         >
           <h2 className="font-pixel text-4xl text-center text-white mb-12" style={{ textShadow: '4px 4px 0px rgba(0,0,0,0.3)' }}>
-            🎁 BIRTHDAY LOOT 🎁
+            BIRTHDAY LOOT
           </h2>
           <div className="flex flex-wrap justify-center gap-6 max-w-4xl mx-auto">
             {[Gift, Pizza, Coffee, Music, PartyPopper, Sparkles].map((Icon, i) => (
