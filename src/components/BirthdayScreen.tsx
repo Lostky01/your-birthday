@@ -201,7 +201,7 @@ const BirthdayScreen = () => {
                              pixel-border shadow-[4px_4px_0px_rgba(0,0,0,0.3)] sm:shadow-[8px_8px_0px_rgba(0,0,0,0.3)]
                              max-w-xs sm:max-w-md w-auto" 
               >
-                  🎉 SPAM CONFETTI 🎉
+                  SPAM CONFETTI!
               </Button>
           </motion.div>
 
