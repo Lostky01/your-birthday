@@ -179,7 +179,7 @@ const BirthdayScreen = () => {
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              HAPPY BIRTHDAY!
+              HAPPY BIRTHDAY FALAH!
             </motion.h1>
             <motion.p 
               className="font-retro text-2xl md:text-4xl   text-yellow-300"
