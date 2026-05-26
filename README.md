@@ -1,1 +1,1 @@
-# kurang baik apa sih gw sama lu coba wkwk 2 tahun loh effort, terus balesannya lu pura pura ga kenal pas ketemu gw?
+# life lesson jangan terlalu baik sama orang wkwk belum tentu mereka bisa baikin kita balik
